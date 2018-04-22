@@ -310,6 +310,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ControllerCamera.cs" />
     <Compile Include="Assets\Scripts\ControllerCanvasMainMenu.cs" />
     <Compile Include="Assets\Scripts\ControllerGameManager.cs" />
     <Compile Include="Assets\Scripts\ControllerHotDog.cs" />

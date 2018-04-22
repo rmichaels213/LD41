@@ -48,14 +48,6 @@ public class ControllerGameManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Shoot a hot dog in the dorection of the collider
-	/// </summary>
-	private void ShootHotDog()
-	{
-		Debug.Log( "Shooting a hot dog at (" + Input.mousePosition.x + "," + Input.mousePosition.y + ")" );
-	}
-
-	/// <summary>
 	/// Rusn every frame.
 	/// </summary>
 	public void Update()
@@ -73,7 +65,7 @@ public class ControllerGameManager : MonoBehaviour
 			else
 			{
 				// We are probably trying to shoot something! Shoot in that direction, if we have hot dogs, of course.
-				ShootHotDog();
+				ControllerTruck.truck.Shoot();
 			}
 		}
 	}

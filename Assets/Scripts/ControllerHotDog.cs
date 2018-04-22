@@ -17,6 +17,7 @@ public class ControllerHotDog : MonoBehaviour
 	/// <param name="collision"></param>
 	void OnCollisionEnter( Collision collision )
 	{
+		//TODO: Doesn't seem to ignore Player inside truck collisions?
 		if ( collision.gameObject.tag == "Player" )
 		{
 			Physics2D.IgnoreCollision( GetComponent<BoxCollider2D>(), collision.gameObject.GetComponent<BoxCollider2D>() );

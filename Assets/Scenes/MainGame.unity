@@ -1894,19 +1894,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hotDog: {fileID: 1582419821173120, guid: 525a53262e15ddc45b0071918d3152eb, type: 2}
-  mainCamera: {fileID: 1754486415}
   player: {fileID: 1256301857}
   truckBorder: {fileID: 0}
+  isAccelerating: 0
+  isDecelerating: 0
   isPlayerMoving: 0
   acceleration: 10
   backwardsAcceleration: 2
-  cameraLagTime: 30
-  cameraAcceleration: 5
-  cameraDeceleration: 0.25
   deceleration: 5
   horizontalSpeed: 5
-  maxCameraHeight: 10
-  minCameraHeight: 5
   maxSpeed: 30
   maxBackwardsSpeed: -5
   maxHorizontalPosition: 4.5
@@ -3981,7 +3977,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1256301856}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -5453,6 +5449,7 @@ GameObject:
   - component: {fileID: 1754486415}
   - component: {fileID: 1754486414}
   - component: {fileID: 1754486413}
+  - component: {fileID: 1754486417}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5523,6 +5520,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1754486417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1754486412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a26e3c575cb659f4584c5eef76273c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 558324775}
+  cameraAcceleration: 5
+  cameraDeceleration: 10
+  maxCameraHeight: 10
+  minCameraHeight: 3
+  isAccelerating: 0
+  isDecelerating: 0
 --- !u!4 &1756093342 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4571081207005140, guid: 8dbc02942064cb8469b043eab8eeaf06,

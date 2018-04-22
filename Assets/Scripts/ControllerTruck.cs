@@ -17,21 +17,17 @@ public class ControllerTruck : MonoBehaviour
 	private const float TRUCKZPOSITION = -1.5f;
 
 	public GameObject hotDog;
-	public Camera mainCamera;
 	public Transform player;
 	public GameObject truckBorder;
 
+	public bool isAccelerating;
+	public bool isDecelerating;
 	public bool isPlayerMoving;
 
 	public float acceleration = .5f;
 	public float backwardsAcceleration = .5f;
-	public float cameraLagTime = 30f;
-	public float cameraAcceleration = .5f;
-	public float cameraDeceleration = .1f;
 	public float deceleration = 5f;
 	public float horizontalSpeed = 5f;
-	public float maxCameraHeight = 10f;
-	public float minCameraHeight = 5f;
 	public float maxSpeed = 50f;
 	public float maxBackwardsSpeed = -20f;
 	public float maxHorizontalPosition = 4.5f;
@@ -46,7 +42,7 @@ public class ControllerTruck : MonoBehaviour
 		truck = this;
 	}
 
-	public void LateUpdate()
+	public void Update()
 	{
 		// Detect rotation and fix
 		float zrot = transform.rotation.z;
@@ -58,31 +54,27 @@ public class ControllerTruck : MonoBehaviour
 		Quaternion trot = Quaternion.Euler( 0f, 0f, zrot );
 		transform.rotation = Quaternion.Slerp( transform.rotation, trot, Time.deltaTime * 5.0f );
 
-		// Detect sliding movement
-		if ( transform.position.x != 0f || transform.position.y != 0f )
-		{
-			transform.position = new Vector3( 0f, 0f );
-		}
-
-		float xpos = ControllerRoad.controller.transform.position.x;
-		float ypos = ControllerRoad.controller.transform.position.y;
+		float xpos = transform.position.x;
+		float ypos = transform.position.y;
 
 		//TODO: Handle changing direction from up to down, need to go to zero first. Currently going from +30 to -30
 
 		// Handle acceleration
 		if ( Input.GetAxis( "Vertical" ) > 0f )
 		{
+			isAccelerating = true;
+			isDecelerating = false;
+
 			if ( verticalSpeed < maxSpeed )
 			{
 				verticalSpeed += acceleration;
 			}
-			if ( mainCamera.orthographicSize < maxCameraHeight )
-			{
-				mainCamera.orthographicSize += cameraAcceleration * Time.deltaTime;
-			}
 		}
 		else if ( Input.GetAxis( "Vertical" ) < 0f )
 		{
+			isAccelerating = false;
+			isDecelerating = true;
+
 			if ( verticalSpeed > 0 )
 			{
 				// We're still moving forward, just decelerate to 0
@@ -92,15 +84,12 @@ public class ControllerTruck : MonoBehaviour
 			{
 				verticalSpeed -= backwardsAcceleration;
 			}
-
-			// Handle camera
-			if ( mainCamera.orthographicSize < maxCameraHeight )
-			{
-				mainCamera.orthographicSize += cameraAcceleration * Time.deltaTime;
-			}
 		}
 		else
 		{
+			isAccelerating = false;
+			isDecelerating = false;
+
 			if ( verticalSpeed > 0f )
 			{
 				verticalSpeed -= deceleration;
@@ -120,16 +109,11 @@ public class ControllerTruck : MonoBehaviour
 					verticalSpeed = 0f;
 				}
 			}
-
-			if ( mainCamera.orthographicSize > minCameraHeight )
-			{
-				mainCamera.orthographicSize -= cameraDeceleration;
-			}
 		}
 
 		// Set new positions (negative so we affect the road properly)
-		xpos += horizontalSpeed * Time.deltaTime * -Input.GetAxis( "Horizontal" );
-		ypos -= verticalSpeed * Time.deltaTime;
+		xpos += horizontalSpeed * Time.deltaTime * Input.GetAxis( "Horizontal" );
+		ypos += verticalSpeed * Time.deltaTime;
 
 		// Handle clamps for road (truck)
 		if ( xpos > maxHorizontalPosition )
@@ -141,18 +125,8 @@ public class ControllerTruck : MonoBehaviour
 			xpos = -maxHorizontalPosition;
 		}
 
-		// Handle clamps for camera
-		if ( mainCamera.orthographicSize > maxCameraHeight )
-		{
-			mainCamera.orthographicSize = maxCameraHeight;
-		}
-		if ( mainCamera.orthographicSize < minCameraHeight )
-		{
-			mainCamera.orthographicSize = minCameraHeight;
-		}
-
-		// Apply to road
-		ControllerRoad.controller.transform.position = new Vector3( xpos, ypos );
+		// Apply to the truck
+		transform.position = new Vector3( xpos, ypos );
 
 		// Update player
 		if ( isPlayerMoving )
@@ -181,22 +155,18 @@ public class ControllerTruck : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Called every frame
+	/// Shoot hotdog.
 	/// </summary>
-	public void Update()
+	public void Shoot()
 	{
-		// Get shooting
-		if ( Input.GetMouseButtonDown( 0 ) )
-		{
-			// Shoot
-			GameObject newHotDog = Instantiate( hotDog, transform.position, Quaternion.identity );
-			//Physics2D.IgnoreCollision( newHotDog.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>() );
+		// Shoot
+		GameObject newHotDog = Instantiate( hotDog, transform.position, Quaternion.identity );
 
-			Vector3 target = Camera.main.ScreenToWorldPoint( new Vector3( Input.mousePosition.x, Input.mousePosition.y, 0f ) );
-			newHotDog.GetComponent<Rigidbody2D>().velocity = new Vector2( target.x, target.y );
+		// TODO: Doesn't work once we leave origin (0,0)
+		Vector3 target = Camera.main.ScreenToWorldPoint( new Vector3( Input.mousePosition.x, Input.mousePosition.y, 0f ) );
+		newHotDog.GetComponent<Rigidbody2D>().velocity = new Vector2( target.x, target.y );
 
-			// Remove hotdog after 5 seconds
-			Destroy( newHotDog, 5f );
-		}
+		// Remove hotdog after 5 seconds
+		Destroy( newHotDog, 5f );
 	}
 }
