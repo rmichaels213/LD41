@@ -1256,7 +1256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8737bd52009bb0f4c94aa8110a8437d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hotdog: {fileID: 1977241755405974, guid: 525a53262e15ddc45b0071918d3152eb, type: 2}
 --- !u!4 &384512639
 Transform:
   m_ObjectHideFlags: 0
@@ -1815,12 +1814,12 @@ GameObject:
   m_Component:
   - component: {fileID: 558324777}
   - component: {fileID: 558324776}
-  - component: {fileID: 558324778}
   - component: {fileID: 558324779}
   - component: {fileID: 558324780}
+  - component: {fileID: 558324778}
   m_Layer: 0
   m_Name: truck
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1880,7 +1879,6 @@ Transform:
   m_LocalScale: {x: 2.8801875, y: 2.8801866, z: 2.8801866}
   m_Children:
   - {fileID: 1256301857}
-  - {fileID: 1875795210}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1895,10 +1893,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65b5ce611a49ffe4b8472f68a4a317a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hotDog: {fileID: 1582419821173120, guid: 525a53262e15ddc45b0071918d3152eb, type: 2}
   mainCamera: {fileID: 1754486415}
-  hotDog: {fileID: 1977241755405974, guid: 525a53262e15ddc45b0071918d3152eb, type: 2}
   player: {fileID: 1256301857}
-  truckBorder: {fileID: 1875795209}
+  truckBorder: {fileID: 0}
   isPlayerMoving: 0
   acceleration: 10
   backwardsAcceleration: 2
@@ -1925,7 +1923,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.0019496679, y: -0.0019497275}
@@ -3904,7 +3902,7 @@ GameObject:
   - component: {fileID: 1256301859}
   m_Layer: 0
   m_Name: player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5948,60 +5946,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1822908279}
---- !u!1 &1875795209
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1875795210}
-  - component: {fileID: 1875795211}
-  m_Layer: 0
-  m_Name: truckBorder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1875795210
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1875795209}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 558324777}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1875795211
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1875795209}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.54, y: 0.85}
-  m_EdgeRadius: 0.125
 --- !u!4 &1898608363 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4571081207005140, guid: 8dbc02942064cb8469b043eab8eeaf06,

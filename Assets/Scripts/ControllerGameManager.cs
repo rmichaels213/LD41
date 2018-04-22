@@ -12,7 +12,6 @@ using UnityEngine;
 public class ControllerGameManager : MonoBehaviour
 {
 	public static ControllerGameManager controller;
-	public GameObject hotdog;
 
 	/// <summary>
 	/// Runs one time at game creation.
@@ -54,8 +53,6 @@ public class ControllerGameManager : MonoBehaviour
 	private void ShootHotDog()
 	{
 		Debug.Log( "Shooting a hot dog at (" + Input.mousePosition.x + "," + Input.mousePosition.y + ")" );
-
-		GameObject shootingDog = Instantiate( hotdog );
 	}
 
 	/// <summary>
@@ -78,10 +75,6 @@ public class ControllerGameManager : MonoBehaviour
 				// We are probably trying to shoot something! Shoot in that direction, if we have hot dogs, of course.
 				ShootHotDog();
 			}
-		}
-		else if ( Input.GetMouseButtonDown( 1 ) )
-		{
-			ControllerTruck.truck.ShootHotDog();
 		}
 	}
 }

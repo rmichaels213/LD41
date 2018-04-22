@@ -310,13 +310,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ControllerPlayer.cs" />
     <Compile Include="Assets\Scripts\ControllerCanvasMainMenu.cs" />
     <Compile Include="Assets\Scripts\ControllerGameManager.cs" />
     <Compile Include="Assets\Scripts\ControllerHotDog.cs" />
     <Compile Include="Assets\Scripts\ControllerMainGameMenu.cs" />
     <Compile Include="Assets\Scripts\ControllerMenu.cs" />
     <Compile Include="Assets\Scripts\ControllerOptionsMenu.cs" />
+    <Compile Include="Assets\Scripts\ControllerPlayer.cs" />
     <Compile Include="Assets\Scripts\ControllerRoad.cs" />
     <Compile Include="Assets\Scripts\ControllerTruck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />

@@ -16,8 +16,8 @@ public class ControllerTruck : MonoBehaviour
 
 	private const float TRUCKZPOSITION = -1.5f;
 
-	public Camera mainCamera;
 	public GameObject hotDog;
+	public Camera mainCamera;
 	public Transform player;
 	public GameObject truckBorder;
 
@@ -181,11 +181,22 @@ public class ControllerTruck : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Shoot a hot dog
+	/// Called every frame
 	/// </summary>
-	public void ShootHotDog()
+	public void Update()
 	{
-		GameObject bPrefab = Instantiate( hotDog, new Vector3( transform.position.x, transform.position.y, transform.position.z ), Quaternion.identity );
-		bPrefab.GetComponent<Rigidbody2D>().AddForce( Vector2.up * 10f );
+		// Get shooting
+		if ( Input.GetMouseButtonDown( 0 ) )
+		{
+			// Shoot
+			GameObject newHotDog = Instantiate( hotDog, transform.position, Quaternion.identity );
+			//Physics2D.IgnoreCollision( newHotDog.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>() );
+
+			Vector3 target = Camera.main.ScreenToWorldPoint( new Vector3( Input.mousePosition.x, Input.mousePosition.y, 0f ) );
+			newHotDog.GetComponent<Rigidbody2D>().velocity = new Vector2( target.x, target.y );
+
+			// Remove hotdog after 5 seconds
+			Destroy( newHotDog, 5f );
+		}
 	}
 }
