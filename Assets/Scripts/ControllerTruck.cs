@@ -22,6 +22,7 @@ public class ControllerTruck : MonoBehaviour
 
 	public bool isAccelerating;
 	public bool isDecelerating;
+	public bool isObjectHit;
 	public bool isPlayerMoving;
 
 	public float acceleration = .5f;
@@ -57,81 +58,84 @@ public class ControllerTruck : MonoBehaviour
 		Quaternion trot = Quaternion.Euler( 0f, 0f, zrot );
 		transform.rotation = Quaternion.Slerp( transform.rotation, trot, Time.deltaTime * 5.0f );
 
-		float xpos = transform.position.x;
-		float ypos = transform.position.y;
-
-		//TODO: Handle changing direction from up to down, need to go to zero first. Currently going from +30 to -30
-
-		// Handle acceleration
-		if ( Input.GetAxis( "Vertical" ) > 0f )
+		if ( !isObjectHit )
 		{
-			isAccelerating = true;
-			isDecelerating = false;
+			float xpos = transform.position.x;
+			float ypos = transform.position.y;
 
-			if ( verticalSpeed < maxSpeed )
-			{
-				verticalSpeed += acceleration;
-			}
-		}
-		else if ( Input.GetAxis( "Vertical" ) < 0f )
-		{
-			isAccelerating = false;
-			isDecelerating = true;
+			//TODO: Handle changing direction from up to down, need to go to zero first. Currently going from +30 to -30
 
-			if ( verticalSpeed > 0 )
+			// Handle acceleration
+			if ( Input.GetAxis( "Vertical" ) > 0f )
 			{
-				// We're still moving forward, just decelerate to 0
-				verticalSpeed -= deceleration;
-			}
-			else if ( verticalSpeed > maxBackwardsSpeed )
-			{
-				verticalSpeed -= backwardsAcceleration;
-			}
-		}
-		else
-		{
-			isAccelerating = false;
-			isDecelerating = false;
+				isAccelerating = true;
+				isDecelerating = false;
 
-			if ( verticalSpeed > 0f )
-			{
-				verticalSpeed -= deceleration;
-
-				if ( verticalSpeed < 0f )
+				if ( verticalSpeed < maxSpeed )
 				{
-					verticalSpeed = 0f;
+					verticalSpeed += acceleration;
 				}
 			}
-
-			if ( verticalSpeed < 0f )
+			else if ( Input.GetAxis( "Vertical" ) < 0f )
 			{
-				verticalSpeed += deceleration;
+				isAccelerating = false;
+				isDecelerating = true;
+
+				if ( verticalSpeed > 0 )
+				{
+					// We're still moving forward, just decelerate to 0
+					verticalSpeed -= deceleration;
+				}
+				else if ( verticalSpeed > maxBackwardsSpeed )
+				{
+					verticalSpeed -= backwardsAcceleration;
+				}
+			}
+			else
+			{
+				isAccelerating = false;
+				isDecelerating = false;
 
 				if ( verticalSpeed > 0f )
 				{
-					verticalSpeed = 0f;
+					verticalSpeed -= deceleration;
+
+					if ( verticalSpeed < 0f )
+					{
+						verticalSpeed = 0f;
+					}
+				}
+
+				if ( verticalSpeed < 0f )
+				{
+					verticalSpeed += deceleration;
+
+					if ( verticalSpeed > 0f )
+					{
+						verticalSpeed = 0f;
+					}
 				}
 			}
+
+			// Set new positions (negative so we affect the road properly)
+			xpos += horizontalSpeed * Time.deltaTime * Input.GetAxis( "Horizontal" );
+			ypos += verticalSpeed * Time.deltaTime;
+
+			// Handle clamps for road (truck)
+			if ( xpos > maxHorizontalPosition )
+			{
+				xpos = maxHorizontalPosition;
+			}
+			if ( xpos < -maxHorizontalPosition )
+			{
+				xpos = -maxHorizontalPosition;
+			}
+
+			// Apply to the truck
+			lastPosition = transform.position;
+			transform.position = new Vector3( xpos, ypos );
 		}
-
-		// Set new positions (negative so we affect the road properly)
-		xpos += horizontalSpeed * Time.deltaTime * Input.GetAxis( "Horizontal" );
-		ypos += verticalSpeed * Time.deltaTime;
-
-		// Handle clamps for road (truck)
-		if ( xpos > maxHorizontalPosition )
-		{
-			xpos = maxHorizontalPosition;
-		}
-		if ( xpos < -maxHorizontalPosition )
-		{
-			xpos = -maxHorizontalPosition;
-		}
-
-		// Apply to the truck
-		lastPosition = transform.position;
-		transform.position = new Vector3( xpos, ypos );
-
+		
 		// Update player
 		if ( isPlayerMoving )
 		{
@@ -163,9 +167,6 @@ public class ControllerTruck : MonoBehaviour
 	/// </summary>
 	public void Shoot()
 	{
-		// Shoot
-		GameObject newHotDog = Instantiate( hotDog, transform.position, Quaternion.identity );
-
 		// TODO: Need to take into account truck velocity
 		Vector2 mouseTarget = Camera.main.ScreenToWorldPoint( new Vector2( Input.mousePosition.x, Input.mousePosition.y ) );
 		Vector2 current = new Vector2( lastPosition.x, lastPosition.y );
@@ -180,6 +181,17 @@ public class ControllerTruck : MonoBehaviour
 
 		velocity = velocity + movingVelocity;
 
+		Vector3 offset;
+		if ( mouseTarget.x < transform.position.x )
+		{
+			offset = new Vector2( -1f, 0f );
+		}
+		else 
+		{
+			offset = new Vector2( 1f, 0f );
+		}
+
+		GameObject newHotDog = Instantiate( hotDog, transform.position + offset, Quaternion.identity );
 		newHotDog.GetComponent<Rigidbody2D>().velocity = velocity.normalized * hotDogMovingSpeed;
 
 		// Remove hotdog after 5 seconds

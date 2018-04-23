@@ -319,6 +319,7 @@
     <Compile Include="Assets\Scripts\ControllerOptionsMenu.cs" />
     <Compile Include="Assets\Scripts\ControllerPlayer.cs" />
     <Compile Include="Assets\Scripts\ControllerRoad.cs" />
+    <Compile Include="Assets\Scripts\ControllerRoadBlock.cs" />
     <Compile Include="Assets\Scripts\ControllerTruck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
