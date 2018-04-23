@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class ControllerHotDog : MonoBehaviour
 {
-	public float spinSpeed;
+	private float speed;
 
 	/// <summary>
 	/// Run on collision
@@ -25,10 +25,19 @@ public class ControllerHotDog : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Runs once when created.
+	/// </summary>
+	public void Start()
+	{
+		speed = Random.Range( -360f, 360f );
+	}
+
+	/// <summary>
 	/// Update is called once per frame
 	/// </summary>
 	void Update()
 	{
-		GetComponent<Rigidbody2D>().rotation += spinSpeed * Time.deltaTime;
+		
+		GetComponent<Rigidbody2D>().rotation += speed * Time.deltaTime;
 	}
 }

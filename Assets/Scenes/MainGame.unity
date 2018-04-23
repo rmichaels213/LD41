@@ -1902,7 +1902,8 @@ MonoBehaviour:
   acceleration: 10
   backwardsAcceleration: 2
   deceleration: 5
-  horizontalSpeed: 5
+  horizontalSpeed: 10
+  hotDogMovingSpeed: 5
   maxSpeed: 30
   maxBackwardsSpeed: -5
   maxHorizontalPosition: 4.5
@@ -5535,7 +5536,7 @@ MonoBehaviour:
   cameraAcceleration: 5
   cameraDeceleration: 10
   maxCameraHeight: 10
-  minCameraHeight: 3
+  minCameraHeight: 5
   isAccelerating: 0
   isDecelerating: 0
 --- !u!4 &1756093342 stripped

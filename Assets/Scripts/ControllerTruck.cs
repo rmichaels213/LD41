@@ -28,12 +28,15 @@ public class ControllerTruck : MonoBehaviour
 	public float backwardsAcceleration = .5f;
 	public float deceleration = 5f;
 	public float horizontalSpeed = 5f;
+	public float hotDogMovingSpeed = 5f;
 	public float maxSpeed = 50f;
 	public float maxBackwardsSpeed = -20f;
 	public float maxHorizontalPosition = 4.5f;
 	public float playerSpeed = 1f;
 	public float rotationSpeed = 1f;
 	public float verticalSpeed = 1f;
+
+	private Vector2 lastPosition;
 
 	public Vector3 playerTargetPosition;
 
@@ -126,6 +129,7 @@ public class ControllerTruck : MonoBehaviour
 		}
 
 		// Apply to the truck
+		lastPosition = transform.position;
 		transform.position = new Vector3( xpos, ypos );
 
 		// Update player
@@ -162,9 +166,21 @@ public class ControllerTruck : MonoBehaviour
 		// Shoot
 		GameObject newHotDog = Instantiate( hotDog, transform.position, Quaternion.identity );
 
-		// TODO: Doesn't work once we leave origin (0,0)
-		Vector3 target = Camera.main.ScreenToWorldPoint( new Vector3( Input.mousePosition.x, Input.mousePosition.y, 0f ) );
-		newHotDog.GetComponent<Rigidbody2D>().velocity = new Vector2( target.x, target.y );
+		// TODO: Need to take into account truck velocity
+		Vector2 mouseTarget = Camera.main.ScreenToWorldPoint( new Vector2( Input.mousePosition.x, Input.mousePosition.y ) );
+		Vector2 current = new Vector2( lastPosition.x, lastPosition.y );
+		//Debug.Log( "Current: " + current + ", target: " + target + ", mouseTarget: " + mouseTarget );
+
+		Vector2 velocity = mouseTarget - current;
+		//Debug.Log( "Velocity: " + velocity );
+
+		// Get vector of the moving truck
+		Vector2 movingVelocity = new Vector2( transform.position.x, transform.position.y ) - lastPosition;
+		Debug.Log( "Moving velocity: " + movingVelocity );
+
+		velocity = velocity + movingVelocity;
+
+		newHotDog.GetComponent<Rigidbody2D>().velocity = velocity.normalized * hotDogMovingSpeed;
 
 		// Remove hotdog after 5 seconds
 		Destroy( newHotDog, 5f );
