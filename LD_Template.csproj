@@ -13,12 +13,14 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -310,16 +312,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\CanvasGameOver.cs" />
+    <Compile Include="Assets\Scripts\CanvasMainMenu.cs" />
+    <Compile Include="Assets\Scripts\CanvasMenu.cs" />
+    <Compile Include="Assets\Scripts\CanvasPause.cs" />
     <Compile Include="Assets\Scripts\ControllerCamera.cs" />
-    <Compile Include="Assets\Scripts\ControllerCanvasMainMenu.cs" />
+    <Compile Include="Assets\Scripts\ControllerCar.cs" />
+    <Compile Include="Assets\Scripts\ControllerCarGenerator.cs" />
+    <Compile Include="Assets\Scripts\ControllerDontDestroy.cs" />
     <Compile Include="Assets\Scripts\ControllerGameManager.cs" />
     <Compile Include="Assets\Scripts\ControllerHotDog.cs" />
-    <Compile Include="Assets\Scripts\ControllerMainGameMenu.cs" />
     <Compile Include="Assets\Scripts\ControllerMenu.cs" />
-    <Compile Include="Assets\Scripts\ControllerOptionsMenu.cs" />
+    <Compile Include="Assets\Scripts\ControllerPerson.cs" />
+    <Compile Include="Assets\Scripts\ControllerPersonGenerator.cs" />
     <Compile Include="Assets\Scripts\ControllerPlayer.cs" />
     <Compile Include="Assets\Scripts\ControllerRoad.cs" />
     <Compile Include="Assets\Scripts\ControllerRoadBlock.cs" />
+    <Compile Include="Assets\Scripts\ControllerRoadEnd.cs" />
     <Compile Include="Assets\Scripts\ControllerTruck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />

@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Car
+  - HotDog
   layers:
   - Default
   - TransparentFX
@@ -38,6 +40,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Road
+    uniqueID: 1232655657
+    locked: 0
+  - name: Cars
+    uniqueID: 1342293277
+    locked: 0
+  - name: Player
+    uniqueID: 2775494733
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

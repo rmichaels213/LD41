@@ -14,7 +14,9 @@ public class ControllerTruck : MonoBehaviour
 {
 	public static ControllerTruck truck;
 
+	private const float HOTDOGLIFECYCLE = 5f;
 	private const float TRUCKZPOSITION = -1.5f;
+	private const float SLOWSPEED = .5f;
 
 	public GameObject hotDog;
 	public Transform player;
@@ -28,6 +30,7 @@ public class ControllerTruck : MonoBehaviour
 	public float acceleration = .5f;
 	public float backwardsAcceleration = .5f;
 	public float deceleration = 5f;
+	public int foodSold;
 	public float horizontalSpeed = 5f;
 	public float hotDogMovingSpeed = 5f;
 	public float maxSpeed = 50f;
@@ -36,10 +39,10 @@ public class ControllerTruck : MonoBehaviour
 	public float playerSpeed = 1f;
 	public float rotationSpeed = 1f;
 	public float verticalSpeed = 1f;
+	public Vector3 playerTargetPosition;
+	public int numberOfCollisions;
 
 	private Vector2 lastPosition;
-
-	public Vector3 playerTargetPosition;
 
 	public void Awake()
 	{
@@ -48,105 +51,118 @@ public class ControllerTruck : MonoBehaviour
 
 	public void Update()
 	{
-		// Detect rotation and fix
-		float zrot = transform.rotation.z;
-		if ( zrot > 0f || zrot < 0f )
+		if ( !ControllerGameManager.controller.isGameOver && !ControllerGameManager.controller.isPaused )
 		{
-			zrot += rotationSpeed * Time.deltaTime;
-		}
-
-		Quaternion trot = Quaternion.Euler( 0f, 0f, zrot );
-		transform.rotation = Quaternion.Slerp( transform.rotation, trot, Time.deltaTime * 5.0f );
-
-		if ( !isObjectHit )
-		{
-			float xpos = transform.position.x;
-			float ypos = transform.position.y;
-
-			//TODO: Handle changing direction from up to down, need to go to zero first. Currently going from +30 to -30
-
-			// Handle acceleration
-			if ( Input.GetAxis( "Vertical" ) > 0f )
+			// Detect rotation and fix
+			float zrot = transform.rotation.z;
+			if ( zrot > 0f || zrot < 0f )
 			{
-				isAccelerating = true;
-				isDecelerating = false;
-
-				if ( verticalSpeed < maxSpeed )
-				{
-					verticalSpeed += acceleration;
-				}
+				zrot += rotationSpeed * Time.deltaTime;
 			}
-			else if ( Input.GetAxis( "Vertical" ) < 0f )
+
+			Quaternion trot = Quaternion.Euler( 0f, 0f, zrot );
+			transform.rotation = Quaternion.Slerp( transform.rotation, trot, Time.deltaTime * 5.0f );
+
+			if ( !isObjectHit )
 			{
-				isAccelerating = false;
-				isDecelerating = true;
+				float xpos = transform.position.x;
+				float ypos = transform.position.y;
 
-				if ( verticalSpeed > 0 )
+				//TODO: Handle changing direction from up to down, need to go to zero first. Currently going from +30 to -30
+
+				// Use shift key to go half speed
+				float speedMultiplier = 1f;
+				if ( Input.GetKey( KeyCode.LeftShift ) || Input.GetKey( KeyCode.RightShift ) )
 				{
-					// We're still moving forward, just decelerate to 0
-					verticalSpeed -= deceleration;
+					Debug.Log( "Slowing down!" );
+					speedMultiplier = SLOWSPEED;
 				}
-				else if ( verticalSpeed > maxBackwardsSpeed )
-				{
-					verticalSpeed -= backwardsAcceleration;
-				}
-			}
-			else
-			{
-				isAccelerating = false;
-				isDecelerating = false;
 
-				if ( verticalSpeed > 0f )
+				// Handle acceleration
+				if ( Input.GetAxis( "Vertical" ) > 0f )
 				{
-					verticalSpeed -= deceleration;
+					isAccelerating = true;
+					isDecelerating = false;
 
-					if ( verticalSpeed < 0f )
+					if ( verticalSpeed < maxSpeed )
 					{
-						verticalSpeed = 0f;
+						verticalSpeed += acceleration;
 					}
 				}
-
-				if ( verticalSpeed < 0f )
+				else if ( Input.GetAxis( "Vertical" ) < 0f )
 				{
-					verticalSpeed += deceleration;
+					isAccelerating = false;
+					isDecelerating = true;
+
+					if ( verticalSpeed > 0 )
+					{
+						// We're still moving forward, just decelerate to 0
+						verticalSpeed -= deceleration;
+					}
+					else if ( verticalSpeed > maxBackwardsSpeed )
+					{
+						verticalSpeed -= backwardsAcceleration;
+					}
+				}
+				else
+				{
+					isAccelerating = false;
+					isDecelerating = false;
 
 					if ( verticalSpeed > 0f )
 					{
-						verticalSpeed = 0f;
+						verticalSpeed -= deceleration;
+
+						if ( verticalSpeed < 0f )
+						{
+							verticalSpeed = 0f;
+						}
+					}
+
+					if ( verticalSpeed < 0f )
+					{
+						verticalSpeed += deceleration;
+
+						if ( verticalSpeed > 0f )
+						{
+							verticalSpeed = 0f;
+						}
 					}
 				}
+
+				verticalSpeed = verticalSpeed * speedMultiplier;
+
+				// Set new positions (negative so we affect the road properly)
+				xpos += horizontalSpeed * Time.deltaTime * Input.GetAxis( "Horizontal" );
+				ypos += verticalSpeed * Time.deltaTime;
+
+				// Handle clamps for road (truck)
+				if ( xpos > maxHorizontalPosition )
+				{
+					xpos = maxHorizontalPosition;
+				}
+				if ( xpos < -maxHorizontalPosition )
+				{
+					xpos = -maxHorizontalPosition;
+				}
+
+				// Apply to the truck
+				lastPosition = transform.position;
+				transform.position = new Vector3( xpos, ypos );
 			}
 
-			// Set new positions (negative so we affect the road properly)
-			xpos += horizontalSpeed * Time.deltaTime * Input.GetAxis( "Horizontal" );
-			ypos += verticalSpeed * Time.deltaTime;
-
-			// Handle clamps for road (truck)
-			if ( xpos > maxHorizontalPosition )
+			// Update player
+			if ( isPlayerMoving )
 			{
-				xpos = maxHorizontalPosition;
-			}
-			if ( xpos < -maxHorizontalPosition )
-			{
-				xpos = -maxHorizontalPosition;
-			}
+				Vector3 movement = new Vector3( playerSpeed * playerTargetPosition.x, playerSpeed * playerTargetPosition.y, 0f );
+				movement *= Time.deltaTime;
 
-			// Apply to the truck
-			lastPosition = transform.position;
-			transform.position = new Vector3( xpos, ypos );
-		}
-		
-		// Update player
-		if ( isPlayerMoving )
-		{
-			Vector3 movement = new Vector3( playerSpeed * playerTargetPosition.x, playerSpeed * playerTargetPosition.y, 0f );
-			movement *= Time.deltaTime;
+				player.transform.Translate( movement );
 
-			player.transform.Translate( movement );
-
-			if ( player.transform.position == playerTargetPosition )
-			{
-				isPlayerMoving = false;
+				if ( player.transform.position == playerTargetPosition )
+				{
+					isPlayerMoving = false;
+				}
 			}
 		}
 	}
@@ -194,7 +210,7 @@ public class ControllerTruck : MonoBehaviour
 		GameObject newHotDog = Instantiate( hotDog, transform.position + offset, Quaternion.identity );
 		newHotDog.GetComponent<Rigidbody2D>().velocity = velocity.normalized * hotDogMovingSpeed;
 
-		// Remove hotdog after 5 seconds
-		Destroy( newHotDog, 5f );
+		// Remove hotdogs
+		Destroy( newHotDog, HOTDOGLIFECYCLE );
 	}
 }
